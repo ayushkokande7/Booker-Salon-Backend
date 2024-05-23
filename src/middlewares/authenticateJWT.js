@@ -14,7 +14,7 @@ module.exports = (req, res, next) => {
   try {
     const user = jwt.decode(token);
     const decoded = jwt.verify(token, checkUserType(user.role));
-    req.user_id = decoded;
+    req.user_id = decoded.user_id;
     next();
   } catch (err) {
     res.Response(401, "Invalid Token");

@@ -1,5 +1,5 @@
 const jwt = require("jsonwebtoken");
-const Customer = require("../../models/customer");
+const Jober = require("../../models/jober");
 const generateOTP = require("../../utils/generateOTP");
 const login = async (req, res) => {
   try {
@@ -8,9 +8,9 @@ const login = async (req, res) => {
     if (mobile.toString().length !== 10)
       throw new Error("Invalid mobile number");
     const OTP = generateOTP();
-    const user = await Customer.findOne({ mobile: mobile });
+    const user = await Jober.findOne({ mobile: mobile });
     if (!user) {
-      await Customer.create({ mobile, OTP });
+      await Jober.create({ mobile, OTP });
     } else {
       user.OTP = OTP;
       user.save();
@@ -25,23 +25,27 @@ const verifyOTP = async (req, res) => {
   try {
     const { mobile, OTP } = req.body;
     if (!mobile || !OTP) throw new Error("Invalid data");
-    const user = await Customer.findOne({ mobile: mobile });
+    const user = await Jober.findOne({ mobile: mobile });
     if (!user) throw new Error("User not found");
     if (user.OTP !== OTP) throw new Error("Invalid OTP");
     const token = jwt.sign(
-      { user_id: user._id, role: "customer" },
-      process.env.CUSTOMER_SECRET_KEY,
+      { user_id: user._id, role: "jober" },
+      process.env.JOBER_SECRET_KEY,
       {
         expiresIn: "60d",
       }
     );
     await user.updateOne({ JWT: token });
-    user.save();
+    await user.save();
+    const { fname, lname } = user;
+    if (!fname || !lname)
+      return res.Response(201, "OTP verified successfully", token);
     return res.Response(200, "OTP verified successfully", token);
   } catch (error) {
     return res.Response(400, error.message);
   }
 };
+
 module.exports = {
   login,
   verifyOTP,
