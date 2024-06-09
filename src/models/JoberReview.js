@@ -2,6 +2,10 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const joberReviewSchema = new Schema({
+  booking_id: {
+    type: Schema.Types.ObjectId,
+    ref: "Booking",
+  },
   jober_id: {
     type: Schema.Types.ObjectId,
     ref: "Jober",
@@ -16,5 +20,4 @@ const joberReviewSchema = new Schema({
 });
 
 joberReviewSchema.set("timestamps", true);
-
 module.exports = mongoose.model("JoberReview", joberReviewSchema);

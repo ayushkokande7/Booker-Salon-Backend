@@ -27,7 +27,7 @@ const customerSchema = new Schema({
   },
   image: {
     type: String,
-    default: null,
+    default: "https://aui.atlassian.com/aui/8.8/docs/images/avatar-person.svg",
   },
   favourites: [
     {

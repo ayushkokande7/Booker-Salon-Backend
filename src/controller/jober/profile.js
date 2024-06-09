@@ -1,8 +1,8 @@
-const Customer = require("../../models/customer");
+const Jober = require("../../models/jober");
 
 const getProfile = async (req, res) => {
   try {
-    const user = await Customer.findById(req.user_id);
+    const user = await Jober.findById(req.user_id);
     if (!user) {
       return res.Response(404, "User not found");
     }
@@ -15,7 +15,7 @@ const getProfile = async (req, res) => {
 
 const updateProfile = async (req, res) => {
   try {
-    const user = await Customer.findByIdAndUpdate(req.user_id, req.body, {
+    const user = await Jober.findByIdAndUpdate(req.user_id, req.body, {
       new: true,
     });
     if (!user) {
@@ -31,7 +31,7 @@ const updateProfile = async (req, res) => {
 
 const updateImage = async (req, res) => {
   try {
-    const user = await Customer.findById(req.user_id);
+    const user = await Jober.findById(req.user_id);
     if (!user) {
       return res.Response(404, "User not found");
     }
@@ -46,7 +46,7 @@ const updateImage = async (req, res) => {
 
 const removeImage = async (req, res) => {
   try {
-    const user = await Customer.findById(req.user_id);
+    const user = await Jober.findById(req.user_id);
     if (!user) {
       return res.Response(404, "User not found");
     }

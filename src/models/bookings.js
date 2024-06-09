@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const OTP = require("../utils/generateOTP");
+
 const bookingSchema = new Schema({
   customer_id: {
     type: Schema.Types.ObjectId,
@@ -12,6 +13,7 @@ const bookingSchema = new Schema({
   },
   status: {
     type: String,
+    enum: ["pending", "cancelled", "completed"],
     default: "pending",
   },
   date: {
@@ -25,12 +27,12 @@ const bookingSchema = new Schema({
   booking_code: {
     type: String,
   },
-  // services:[
-  //   {
-  //     type: Schema.Types.ObjectId,
-  //     ref: "Service",
-  //   },
-  // ],
+  services: [
+    {
+      name: String,
+      price: Number,
+    },
+  ],
 });
 
 bookingSchema.pre("save", function (next) {

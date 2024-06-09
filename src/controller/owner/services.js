@@ -3,9 +3,10 @@ const addServices = async (req, res) => {
   try {
     const ser = await Service.findOne({ owner_id: req.user_id });
     if (!ser) {
+      const { name, image, price } = req.body;
       const service = await Service({
         owner_id: req.user_id,
-        service: req.body.service,
+        service: [{ name, image, price }],
       });
       service.save();
     } else {

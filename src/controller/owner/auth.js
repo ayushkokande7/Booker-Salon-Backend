@@ -15,7 +15,7 @@ const login = async (req, res) => {
       user.OTP = OTP;
       user.save();
     }
-    return res.Response(200, "OTP sent successfully");
+    return res.Response(200, "OTP sent successfully", OTP);
   } catch (error) {
     return res.Response(400, error.message);
   }

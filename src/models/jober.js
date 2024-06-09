@@ -1,6 +1,7 @@
 const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const Counter = require("../models/counter");
+
 const joberSchema = new Schema({
   fname: {
     type: String,
@@ -23,9 +24,17 @@ const joberSchema = new Schema({
     default: null,
   },
   OTP: Number,
+  image: {
+    type: String,
+    default: "https://aui.atlassian.com/aui/8.8/docs/images/avatar-person.svg",
+  },
   jober_id: {
     type: String,
     unique: true,
+  },
+  booking_status: {
+    type: Boolean,
+    default: false,
   },
   age: Number,
   gender: String,
