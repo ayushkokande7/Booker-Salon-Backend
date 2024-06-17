@@ -1,6 +1,5 @@
 const Customer = require("../../models/customer");
 const Owner = require("../../models/owner");
-
 const nearbyShops = async (req, res) => {
   try {
     const customer = await Customer.findById(req.user_id);
@@ -29,103 +28,44 @@ const nearbyShops = async (req, res) => {
   }
 };
 
-// const nearbyJober = async (req, res) => {
-//   try {
-//     const customer = await Customer.findById(req.user_id);
-//     if (!customer) {
-//       return res.Response(404, "User not found");
-//     }
-//     const jober = await Owner.aggregate([
-//       {
-//         $geoNear: {
-//           near: {
-//             type: "Point",
-//             coordinates: customer.location.coordinates,
-//           },
-//           distanceField: "distance",
-//           maxDistance: 5000, // 5 km in meters
-//           spherical: true,
-//         },
-//       },
-//       {
-//         $lookup: {
-//           from: "bookings",
-//           localField: "_id",
-//           foreignField: "jober_id",
-//           as: "bookings",
-//         },
-//       },
-//       {
-//         $sort: { distance: 1 },
-//       },
-//     ]);
-
-//     res.Response(200, null, jober);
-//   } catch (err) {
-//     res.Response(500, err.message);
-//   }
-// };
-
 const nearbyJober = async (req, res) => {
   try {
     const customer = await Customer.findById(req.user_id);
     if (!customer) {
       return res.Response(404, "User not found");
     }
-
-    const owners = await Owner.aggregate([
+    const pipeline = [
       {
         $geoNear: {
           near: {
             type: "Point",
-            coordinates: customer.location.coordinates,
+            coordinates: [
+              customer.location.coordinates[0],
+              customer.location.coordinates[1],
+            ],
           },
           distanceField: "distance",
-          maxDistance: 5000, // 5 km in meters
+          maxDistance: 5000, // 5 km radius
           spherical: true,
         },
       },
-      {
-        $lookup: {
-          from: "jobers",
-          localField: "_id",
-          foreignField: "owner_id",
-          as: "jobers",
-        },
-      },
-      {
-        $unwind: "$jobers",
-      },
-      {
-        $lookup: {
-          from: "JoberReview",
-          localField: "jober._id",
-          foreignField: "jober_id",
-          as: "joberRatings",
-        },
-      },
-      {
-        $unwind: {
-          path: "$joberRatings",
-          preserveNullAndEmptyArrays: true,
-        },
-      },
-      {
-        $group: {
-          _id: "$jobers._id",
-          fname: { $first: "$jobers.fname" },
-          lname: { $first: "$jobers.lname" },
-          mobile: { $first: "$jobers.mobile" },
-          distance: { $first: "$distance" },
-          averageRating: { $avg: "$joberRatings.rating" },
-        },
-      },
-      {
-        $sort: { averageRating: -1, distance: 1 },
-      },
-    ]);
 
-    res.Response(200, null, owners);
+      {
+        $lookup: {
+          from: "jobers", // Ensure the collection name matches exactly
+          foreignField: "_id", // The field in the other collection
+          localField: "jobers", // The field in the current collection
+          as: "jobersDetails", // The name of the new field in the current collection
+        },
+      },
+      // {
+      //   $unwind: {
+      //     path: "$jobers", // Specify the path to the field you want to unwind
+      //   },
+      // },
+    ];
+    const joberDetails = await Owner.aggregate(pipeline);
+    res.Response(200, null, joberDetails);
   } catch (err) {
     res.Response(500, err.message);
   }

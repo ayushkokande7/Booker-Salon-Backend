@@ -1,18 +1,21 @@
 const jwt = require("jsonwebtoken");
 const Customer = require("../../models/customer");
 const generateOTP = require("../../utils/generateOTP");
+
 const login = async (req, res) => {
   try {
-    const { mobile } = req.body;
+    const { mobile, FCM_token } = req.body;
+    console.log(mobile);
     if (!mobile) throw new Error("Enter mobile number");
     if (mobile.toString().length !== 10)
       throw new Error("Invalid mobile number");
     const OTP = generateOTP();
     const user = await Customer.findOne({ mobile: mobile });
     if (!user) {
-      await Customer.create({ mobile, OTP });
+      await Customer.create({ mobile, OTP, FCM_token });
     } else {
       user.OTP = OTP;
+      user.FCM_token = FCM_token;
       user.save();
     }
     return res.Response(200, "OTP sent successfully");
@@ -35,13 +38,17 @@ const verifyOTP = async (req, res) => {
         expiresIn: "60d",
       }
     );
-    await user.updateOne({ JWT: token });
+    await user.updateOne({ JWT: token, OTP: null });
     user.save();
-    return res.Response(200, "OTP verified successfully", token);
+    if (user.name) {
+      return res.Response(200, "OTP verified successfully", token);
+    }
+    return res.Response(201, "OTP verified successfully", token);
   } catch (error) {
     return res.Response(400, error.message);
   }
 };
+
 module.exports = {
   login,
   verifyOTP,

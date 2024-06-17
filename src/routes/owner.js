@@ -40,6 +40,6 @@ router
   .put(AddJober.ViewJoberForAdd)
   .post(AddJober.sendOTP);
 
-router.post("/verifyOTP", AddJober.verifyOTP);
+// router.post("/verifyOTP", authenticateJWT, AddJober.verifyOTP);
 
 module.exports = router;

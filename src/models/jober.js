@@ -38,7 +38,14 @@ const joberSchema = new Schema({
   },
   age: Number,
   gender: String,
-  reviewsCount: Number,
+  reviews_count: {
+    type: Number,
+    default: 0,
+  },
+  reviews_rating: {
+    type: Number,
+    default: 0,
+  },
   bookings: {
     total: {
       type: Number,

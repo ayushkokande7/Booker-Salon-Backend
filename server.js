@@ -1,4 +1,5 @@
 const express = require("express");
+const cors = require("cors");
 const port = 3000;
 const app = express();
 const { firebase } = require("./src/firebase");
@@ -7,7 +8,7 @@ const customResponse = require("./src/middlewares/response");
 const DB = require("./src/config/DB");
 require("dotenv").config();
 DB();
-
+app.use(cors());
 app.use(express.json());
 app.use(customResponse);
 app.use("/api", Api);

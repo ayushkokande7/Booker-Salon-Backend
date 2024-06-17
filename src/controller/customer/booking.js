@@ -13,6 +13,7 @@ const getBooking = async (req, res) => {
     res.Response(500, "Internal server error");
   }
 };
+
 const scheduleBooking = async (req, res) => {
   try {
     const booking = await Booking.create({

@@ -2,10 +2,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const customerSchema = new Schema({
-  fname: {
-    type: String,
-  },
-  lname: {
+  name: {
     type: String,
   },
   mobile: {
@@ -18,7 +15,14 @@ const customerSchema = new Schema({
   address: String,
   city: String,
   ZIP: Number,
-  OTP: Number,
+  OTP: {
+    type: Number,
+    default: null,
+  },
+  FCM_token: {
+    type: String,
+    default: null,
+  },
   JWT: String,
   reviewsCount: Number,
   is_verified: {
@@ -45,7 +49,7 @@ const customerSchema = new Schema({
     coordinates: {
       type: [Number],
       required: true,
-      default: [28.60491, 77.0984587],
+      default: [28.60491, 77.0984587], //for testing purpose, remove on production
     },
   },
 });
