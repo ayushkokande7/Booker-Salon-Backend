@@ -2,11 +2,9 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 
 const ownerSchema = new Schema({
-  fname: {
+  name: {
     type: String,
-  },
-  lname: {
-    type: String,
+    default: null,
   },
   mobile: {
     type: Number,
@@ -15,7 +13,8 @@ const ownerSchema = new Schema({
   },
   image: {
     type: String,
-    default: "https://aui.atlassian.com/aui/8.8/docs/images/avatar-person.svg",
+    default:
+      "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
   },
   shopImg: {
     type: String,
