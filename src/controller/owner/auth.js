@@ -35,9 +35,12 @@ const verifyOTP = async (req, res) => {
         expiresIn: "60d",
       }
     );
-    await user.updateOne({ JWT: token });
+    await user.updateOne({ JWT: token, OTP: null });
     user.save();
-    return res.Response(200, "OTP verified successfully", token);
+    return res.Response(200, "OTP verified successfully", {
+      user: user,
+      token: token,
+    });
   } catch (error) {
     return res.Response(400, error.message);
   }

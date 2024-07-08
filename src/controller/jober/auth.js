@@ -15,7 +15,7 @@ const login = async (req, res) => {
       user.OTP = OTP;
       user.save();
     }
-    return res.Response(200, "OTP sent successfully");
+    return res.Response(200, "OTP sent successfully", OTP);
   } catch (error) {
     return res.Response(400, error.message);
   }
@@ -35,12 +35,12 @@ const verifyOTP = async (req, res) => {
         expiresIn: "60d",
       }
     );
-    await user.updateOne({ JWT: token });
+    await user.updateOne({ JWT: token, OTP: null });
     await user.save();
-    const { fname, lname } = user;
-    if (!fname || !lname)
-      return res.Response(201, "OTP verified successfully", token);
-    return res.Response(200, "OTP verified successfully", token);
+    return res.Response(200, "OTP verified successfully", {
+      user: user,
+      token: token,
+    });
   } catch (error) {
     return res.Response(400, error.message);
   }

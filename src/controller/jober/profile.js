@@ -6,9 +6,8 @@ const getProfile = async (req, res) => {
     if (!user) {
       return res.Response(404, "User not found");
     }
-    res.Response(200, "User found", user);
+    res.Response(200, null, user);
   } catch (error) {
-    console.log(error);
     res.Response(500, "Internal server error");
   }
 };
@@ -24,7 +23,6 @@ const updateProfile = async (req, res) => {
     user.save();
     res.Response(200, "Profile updated successfully", user);
   } catch (error) {
-    console.log(error);
     res.Response(500, "Internal server error");
   }
 };
@@ -37,9 +35,8 @@ const updateImage = async (req, res) => {
     }
     user.image = req.body.image;
     user.save();
-    res.Response(200, "Profile updated successfully", user);
+    res.Response(200, null, user);
   } catch (error) {
-    console.log(error);
     res.Response(500, "Internal server error");
   }
 };
@@ -51,11 +48,10 @@ const removeImage = async (req, res) => {
       return res.Response(404, "User not found");
     }
     user.image =
-      "https://aui.atlassian.com/aui/8.8/docs/images/avatar-person.svg";
+      "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png";
     user.save();
-    res.Response(200, "Profile updated successfully", user);
+    res.Response(200, null, user);
   } catch (error) {
-    console.log(error);
     res.Response(500, "Internal server error");
   }
 };

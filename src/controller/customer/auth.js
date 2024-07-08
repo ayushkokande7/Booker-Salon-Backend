@@ -5,7 +5,6 @@ const generateOTP = require("../../utils/generateOTP");
 const login = async (req, res) => {
   try {
     const { mobile, FCM_token } = req.body;
-    console.log(mobile);
     if (!mobile) throw new Error("Enter mobile number");
     if (mobile.toString().length !== 10)
       throw new Error("Invalid mobile number");
@@ -18,7 +17,7 @@ const login = async (req, res) => {
       user.FCM_token = FCM_token;
       user.save();
     }
-    return res.Response(200, "OTP sent successfully");
+    return res.Response(200, "OTP sent successfully", OTP);
   } catch (error) {
     return res.Response(400, error.message);
   }
@@ -35,15 +34,15 @@ const verifyOTP = async (req, res) => {
       { user_id: user._id, role: "customer" },
       process.env.CUSTOMER_SECRET_KEY,
       {
-        expiresIn: "60d",
+        expiresIn: "5d",
       }
     );
     await user.updateOne({ JWT: token, OTP: null });
     user.save();
-    if (user.name) {
-      return res.Response(200, "OTP verified successfully", token);
-    }
-    return res.Response(201, "OTP verified successfully", token);
+    return res.Response(200, "OTP verified successfully", {
+      user: user,
+      token: token,
+    });
   } catch (error) {
     return res.Response(400, error.message);
   }

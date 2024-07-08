@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 const customerSchema = new Schema({
   name: {
     type: String,
+    default: null,
   },
   mobile: {
     type: Number,
@@ -31,7 +32,8 @@ const customerSchema = new Schema({
   },
   image: {
     type: String,
-    default: "https://aui.atlassian.com/aui/8.8/docs/images/avatar-person.svg",
+    default:
+      "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
   },
   favourites: [
     {
@@ -49,7 +51,7 @@ const customerSchema = new Schema({
     coordinates: {
       type: [Number],
       required: true,
-      default: [28.60491, 77.0984587], //for testing purpose, remove on production
+      default: [28.60491, 77.0984587],
     },
   },
 });
